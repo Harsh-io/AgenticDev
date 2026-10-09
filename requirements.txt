@@ -19,3 +19,4 @@ python-dotenv==1.2.4
 pyyaml==6.0.3
 watchfiles==1.3.0
 websockets==17.2 
+langgraph

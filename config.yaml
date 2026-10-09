@@ -1,0 +1,52 @@
+# ============================================================
+# VibeCode.ai — Application Configuration
+# ============================================================
+
+app:
+  name: "VibeCode.ai"
+  environment: "development"
+  debug: false
+
+logging:
+  level: "INFO"
+
+paths:
+  data_dir: "data"
+  output_dir: "outputs"
+
+# ============================================================
+# LLM Configuration
+# All values can be overridden by environment variables.
+# ============================================================
+
+model:
+  # Primary model (OpenAI)
+  primary:
+    provider: "openai"
+    name: "gpt-4o"
+    temperature: 0.2
+    timeout_seconds: 120
+
+  # Fallback model (Groq) — used when primary is unavailable
+  fallback:
+    provider: "groq"
+    name: "llama-3.3-70b-versatile"
+    temperature: 0.2
+    timeout_seconds: 120
+
+# ============================================================
+# Agent Workflow (LangGraph)
+# ============================================================
+
+workflow:
+  framework: "langgraph"
+  require_plan_approval: true
+  require_build_approval: false
+  approval_timeout_seconds: 300
+
+# ============================================================
+# Frontend
+# ============================================================
+
+frontend:
+  origin: "http://localhost:5173"
