@@ -1,0 +1,14 @@
+fastapi
+uvicorn[standard]
+pydantic>=2
+python-dotenv
+
+# LangChain + LangGraph (replaces google-adk)
+langchain>=0.3
+langchain-core>=0.3
+langchain-openai>=0.2
+langchain-groq>=0.2
+langgraph>=0.2
+
+openai
+groq
