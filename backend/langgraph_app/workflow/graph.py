@@ -249,7 +249,7 @@ async def plan_approval_node(state: WorkflowState) -> dict:
 
     approved = await wait_for_approval(run_id, PLAN_APPROVAL)
 
-    if approved:
+    if approved and approved.status == "approved":
         await queue.put(_make_event(
             agent="System",
             message="Plan approved — coding will now begin.",
