@@ -20,19 +20,10 @@ paths:
 # ============================================================
 
 model:
-  # Primary model (OpenAI)
-  primary:
-    provider: "openai"
-    name: "gpt-4o"
-    temperature: 0.2
-    timeout_seconds: 120
-
-  # Fallback model (Groq) — used when primary is unavailable
-  fallback:
-    provider: "groq"
-    name: "llama-3.3-70b-versatile"
-    temperature: 0.2
-    timeout_seconds: 120
+  provider: "groq"
+  name: "llama-3.3-70b-versatile"
+  temperature: 0.2
+  timeout_seconds: 120
 
 # ============================================================
 # Agent Workflow (LangGraph)

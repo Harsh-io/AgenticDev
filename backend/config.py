@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 from dotenv import load_dotenv
 
@@ -8,26 +9,16 @@ from dotenv import load_dotenv
 # ============================================================
 
 load_dotenv()
+load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 
 
 # ============================================================
-# OPENAI (primary model)
-# ============================================================
-
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-
-# LangChain ChatOpenAI uses bare model names (no "openai/" prefix)
-_raw_openai_model = os.getenv("OPENAI_MODEL", "gpt-4o")
-OPENAI_MODEL = _raw_openai_model.replace("openai/", "")
-
-
-# ============================================================
-# GROQ (fallback model)
+# GROQ (sole inference provider)
 # ============================================================
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
 
-GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+GROQ_MODEL = os.getenv("GROQ_MODEL", "qwen/qwen3.8-27b")
 
 
 # ============================================================
@@ -44,14 +35,11 @@ FRONTEND_ORIGIN = os.getenv(
 # VALIDATION
 # ============================================================
 
-if not OPENAI_API_KEY:
-
+if not GROQ_API_KEY:
     raise RuntimeError(
-        "OPENAI_API_KEY is not set. "
-        "Create a .env file in the backend directory."
+        "GROQ_API_KEY is not set. "
+        "Please configure GROQ_API_KEY in your .env file."
     )
 
-os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
-
-if GROQ_API_KEY:
-    os.environ["GROQ_API_KEY"] = GROQ_API_KEY
+os.environ["GROQ_API_KEY"] = GROQ_API_KEY
+os.environ["GROQ_MODEL"] = GROQ_MODEL
