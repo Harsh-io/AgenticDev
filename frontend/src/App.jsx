@@ -1575,13 +1575,25 @@ body {
 
             runCompletedSeen = true;
 
+            const projectData =
+              response.project ||
+              response.data?.project;
+
+            const isReadyForPreview =
+              response.ready_for_preview ??
+              response.data?.ready_for_preview;
+
+            const responseSummary =
+              response.summary ||
+              response.data?.summary;
+
             const generatedFiles =
-              response.project?.files ??
+              projectData?.files ??
               [];
 
 
             if (
-              response.ready_for_preview !== false &&
+              isReadyForPreview !== false &&
               generatedFiles.length > 0
             ) {
               filesRef.current =
@@ -1596,8 +1608,7 @@ body {
               );
 
               setProjectName(
-                response.project
-                  ?.name ||
+                projectData?.name ||
                   projectName ||
                   "ai-generated-project"
               );
@@ -1691,7 +1702,7 @@ body {
                     "assistant",
 
                   content:
-                    response.summary ||
+                    responseSummary ||
                     "The coding workflow completed successfully.",
 
                   timestamp:
@@ -1748,7 +1759,7 @@ body {
 
               if (
                 approval === null &&
-                !response.ready_for_preview
+                !isReadyForPreview
               ) {
                 setLogs((cur) => [
                   ...cur,
