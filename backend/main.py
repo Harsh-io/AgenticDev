@@ -1,7 +1,14 @@
 import json
 import logging
+import os
+import sys
 import time
 from uuid import uuid4
+
+# Ensure backend directory is in sys.path regardless of execution working directory
+_BACKEND_DIR = os.path.dirname(os.path.abspath(__file__))
+if _BACKEND_DIR not in sys.path:
+    sys.path.insert(0, _BACKEND_DIR)
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -14,6 +21,7 @@ from models import (
     AgentRunRequest,
     AgentRunResponse,
     ApprovalResponse,
+    ProjectFile,
     ProjectSnapshot,
 )
 
@@ -55,9 +63,17 @@ app = FastAPI(
     version="1.0.0",
     description=(
         "Production-style AI coding agent "
-        "using LangChain + LangGraph with OpenAI/Groq models"
+        "using LangChain + LangGraph with Groq models"
     ),
 )
+
+@app.get("/")
+async def root():
+    return {
+        "status": "ok",
+        "message": "AgenticDev API is running",
+        "docs": "/docs"
+    }
 
 
 
@@ -71,11 +87,16 @@ ALLOWED_ORIGINS = [
     "https://vibe-web-ai.vercel.app",
     "http://localhost:5173",
     "http://127.0.0.1:5173",
+    "http://localhost:5174",
+    "http://127.0.0.1:5174",
+    "http://localhost:5175",
+    "http://127.0.0.1:5175",
 ]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
+    allow_origin_regex=r"^https?://(localhost|127\.0\.0\.1)(:\d+)?$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -170,7 +191,7 @@ async def health():
         "status": "ok",
         "service": "vibecode-backend",
         "agent_framework": "langgraph",
-        "model_provider": "openai+groq",
+        "model_provider": "groq",
     }
 
 
@@ -235,6 +256,15 @@ async def run_agent_stream(
                     **event,
                 }
 
+                if event.get("type") == "run_completed" and "data" in event:
+                    data = event.get("data") or {}
+                    if "project" in data:
+                        payload["project"] = data["project"]
+                    if "ready_for_preview" in data:
+                        payload["ready_for_preview"] = data["ready_for_preview"]
+                    if "summary" in data:
+                        payload["summary"] = data["summary"]
+
                 event_type = (
                     "run_completed"
                     if event.get("type") == "run_completed"
@@ -259,6 +289,7 @@ async def run_agent_stream(
                     'run_id': run_id,
                     'message': str(exc),
                     'status': 'failed',
+                    'type': 'error',
                 })}\n\n"
             )
 
@@ -293,6 +324,9 @@ async def run_agent(
     run_id = f"run_{uuid4().hex[:12]}"
 
     events: list[AgentEvent] = []
+    final_project = None
+    final_summary = "LangGraph workflow completed."
+    ready_for_preview = False
 
     try:
 
@@ -301,6 +335,24 @@ async def run_agent(
             session_id=run_id,
             project=request.project,
         ):
+
+            if event.get("type") == "run_completed" and "data" in event:
+                data = event.get("data") or {}
+                if data.get("project"):
+                    proj_dict = data["project"]
+                    files_list = [
+                        ProjectFile(path=f["path"], content=f["content"])
+                        for f in proj_dict.get("files", [])
+                        if isinstance(f, dict) and "path" in f and "content" in f
+                    ]
+                    final_project = ProjectSnapshot(
+                        name=proj_dict.get("name", "generated-project"),
+                        framework=proj_dict.get("framework", "vanilla"),
+                        entrypoint=proj_dict.get("entrypoint", "index.html"),
+                        files=files_list,
+                    )
+                ready_for_preview = bool(data.get("ready_for_preview", False))
+                final_summary = data.get("summary", final_summary)
 
             events.append(
                 AgentEvent(
@@ -329,28 +381,23 @@ async def run_agent(
                 )
             )
 
-        # ----------------------------------------------------
-        # TEMPORARY PROJECT FALLBACK
-        # ----------------------------------------------------
-
-        project = (
-            request.project
-            or ProjectSnapshot(
-                name="generated-project",
-                framework="react",
-                entrypoint="src/main.tsx",
-                files=[],
+        if final_project is None:
+            final_project = (
+                request.project
+                or ProjectSnapshot(
+                    name="generated-project",
+                    framework="vanilla",
+                    entrypoint="index.html",
+                    files=[],
+                )
             )
-        )
 
         return AgentRunResponse(
             run_id=run_id,
-            summary=(
-                "LangGraph workflow completed."
-            ),
-            project=project,
+            summary=final_summary,
+            project=final_project,
             events=events,
-            ready_for_preview=False,
+            ready_for_preview=ready_for_preview,
         )
 
     except Exception:
