@@ -98,15 +98,17 @@ export async function streamAgent(
 
       if (
         eventName === "agent_update" ||
+        eventName === "error" ||
         parsed.agent ||
-        parsed.type
+        parsed.type ||
+        parsed.status === "failed"
       ) {
         onEvent(parsed);
       }
 
       if (
         eventName === "run_completed" ||
-        (parsed.run_id && parsed.project)
+        (parsed.run_id && (parsed.project || parsed.data?.project))
       ) {
         onComplete(parsed);
       }
