@@ -12,7 +12,7 @@ project for preview.
 - Multi-agent workflow powered by LangGraph
 - Planner, Coder, Validator, and Reviewer agents
 - Human approval gate before code generation
-- Configurable OpenAI primary model and Groq fallback model
+- Configurable Groq model inference (Llama 3.3 70B Versatile)
 - FastAPI REST endpoints and Server-Sent Events (SSE) streaming
 - Session event history for each agent run
 - React + Vite JavaScript frontend
@@ -130,8 +130,7 @@ keys or other secrets.
 
 The default model configuration includes:
 
-- OpenAI as the primary provider
-- Groq as the fallback provider
+- Groq as the sole inference provider (default: llama-3.3-70b-versatile)
 - Configurable temperature and request timeout
 - A required plan-approval gate
 
@@ -145,12 +144,18 @@ VITE_API_URL=http://localhost:8000
 
 ### Backend
 
-Create or activate a Python 3.12+ environment, install the dependencies, and
-start FastAPI:
+Activate the Python environment and start FastAPI using `--app-dir backend`:
 
 ```powershell
-uv sync
-uv run uvicorn backend.main:app --reload --port 8000
+& .\backend\.venv\Scripts\Activate.ps1
+uvicorn main:app --app-dir backend --reload --port 8000
+```
+
+Or from the `backend/` directory:
+
+```powershell
+cd backend
+uvicorn main:app --reload --port 8000
 ```
 
 If `uv` is not available, install the packages from
