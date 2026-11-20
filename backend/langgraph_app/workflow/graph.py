@@ -1,7 +1,7 @@
 """
 langgraph_app/workflow/graph.py
 
-LangGraph StateGraph definition for the VibeCode agent workflow.
+LangGraph StateGraph definition for the AgenticDev agent workflow.
 
 Workflow:
   planner_node
@@ -46,7 +46,7 @@ from adk_app.workflow.approval import (
 from adk_app.workflow.file_events import parse_coding_result
 
 
-logger = logging.getLogger("vibecode.langgraph.workflow")
+logger = logging.getLogger("agenticdev.langgraph.workflow")
 
 
 # ============================================================
@@ -110,7 +110,7 @@ def _extract_files_from_plan(plan_text: str) -> tuple[list[str], list[str]]:
 
 def _create_fallback_project(prompt: str) -> list[dict[str, str]]:
     """Emergency fallback when the Coder produces unparseable output."""
-    title = prompt[:40] if prompt else "VibeCode App"
+    title = prompt[:40] if prompt else "AgenticDev App"
     return [
         {
             "path": "index.html",
