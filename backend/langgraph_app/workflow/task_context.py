@@ -12,7 +12,7 @@ import os
 from functools import lru_cache
 
 
-logger = logging.getLogger("vibecode.task_context")
+logger = logging.getLogger("agenticdev.task_context")
 
 # Resolve task.txt relative to this file's location:
 # langgraph_app/workflow/task_context.py → ../../.. → project root
