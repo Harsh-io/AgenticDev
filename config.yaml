@@ -1,9 +1,9 @@
 # ============================================================
-# VibeCode.ai — Application Configuration
+# AgenticDev.ai — Application Configuration
 # ============================================================
 
 app:
-  name: "VibeCode.ai"
+  name: "AgenticDev.ai"
   environment: "development"
   debug: false
 
