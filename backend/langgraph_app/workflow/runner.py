@@ -20,7 +20,7 @@ from models import ProjectSnapshot
 from langgraph_app.workflow.graph import get_compiled_graph, WorkflowState
 
 
-logger = logging.getLogger("vibecode.langgraph.runner")
+logger = logging.getLogger("agenticdev.langgraph.runner")
 
 
 # ============================================================
@@ -184,5 +184,8 @@ async def run_langgraph_workflow(
     logger.info("LANGGRAPH RUN COMPLETE | run_id=%s", session_id)
 
 
-# Alias used by main.py
-run_adk_workflow = run_langgraph_workflow
+# Primary runner interface
+run_workflow = run_langgraph_workflow
+
+# Legacy alias kept for backwards compatibility
+run_adk_workflow = run_workflow
