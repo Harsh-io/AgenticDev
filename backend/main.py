@@ -51,7 +51,7 @@ logging.basicConfig(
     ),
 )
 
-logger = logging.getLogger("vibecode")
+logger = logging.getLogger("agenticdev")
 
 
 # ============================================================
@@ -59,7 +59,7 @@ logger = logging.getLogger("vibecode")
 # ============================================================
 
 app = FastAPI(
-    title="VibeCode.ai",
+    title="AgenticDev.ai",
     version="1.0.0",
     description=(
         "Production-style AI coding agent "
@@ -161,6 +161,20 @@ async def request_logger(
 # GLOBAL ERROR HANDLER
 # ============================================================
 
+@app.exception_handler(HTTPException)
+async def http_exception_handler(
+    request: Request,
+    exc: HTTPException,
+):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={
+            "error": exc.detail,
+            "status_code": exc.status_code,
+        },
+    )
+
+
 @app.exception_handler(Exception)
 async def global_exception_handler(
     request: Request,
@@ -177,6 +191,7 @@ async def global_exception_handler(
         content={
             "error": "Internal server error",
             "detail": str(exc),
+            "status_code": 500,
         },
     )
 
@@ -189,7 +204,7 @@ async def global_exception_handler(
 async def health():
     return {
         "status": "ok",
-        "service": "vibecode-backend",
+        "service": "agenticdev-backend",
         "agent_framework": "langgraph",
         "model_provider": "groq",
     }
