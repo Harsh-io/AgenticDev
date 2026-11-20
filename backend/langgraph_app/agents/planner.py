@@ -14,7 +14,7 @@ from langgraph_app.workflow.task_context import task_context_section
 
 
 SYSTEM_PROMPT = """\
-You are the Planning Agent for VibeCode.ai.
+You are the Planning Agent for AgenticDev.ai.
 
 You are responsible for the COMPLETE planning phase.
 

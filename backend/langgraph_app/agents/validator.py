@@ -15,7 +15,7 @@ from langgraph_app.agents.llm import build_llm
 
 
 SYSTEM_PROMPT = """\
-You are the Validator Agent for VibeCode.ai.
+You are the Validator Agent for AgenticDev.ai.
 
 Inspect the generated project.
 

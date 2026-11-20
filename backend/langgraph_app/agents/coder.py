@@ -14,7 +14,7 @@ from langgraph_app.workflow.task_context import task_context_section
 
 
 SYSTEM_PROMPT = """\
-You are the Coding Agent for VibeCode.ai.
+You are the Coding Agent for AgenticDev.ai.
 
 Implement the approved implementation plan.
 

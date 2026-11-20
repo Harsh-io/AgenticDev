@@ -16,7 +16,7 @@ from langgraph_app.workflow.task_context import task_context_section
 
 
 SYSTEM_PROMPT = """\
-You are the final Code Reviewer for VibeCode.ai.
+You are the final Code Reviewer for AgenticDev.ai.
 
 Review the generated application against:
 

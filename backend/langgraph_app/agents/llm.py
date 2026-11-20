@@ -16,7 +16,7 @@ from config import (
 )
 
 
-logger = logging.getLogger("vibecode.llm")
+logger = logging.getLogger("agenticdev.llm")
 
 
 def build_llm(temperature: float = 0.3) -> ChatGroq:
