@@ -275,3 +275,29 @@ class AgentRunResponse(BaseModel):
     review: ReviewResult | None = None
 
     ready_for_preview: bool = False
+
+
+# ============================================================
+# API RUNTIME SCHEMAS
+# ============================================================
+
+
+class HealthResponse(BaseModel):
+    status: str = "ok"
+    service: str = "agenticdev-backend"
+    agent_framework: str = "langgraph"
+    model_provider: str = "groq"
+
+
+class SessionMemoryEvent(BaseModel):
+    author: str
+    summary: str
+    timestamp: str
+
+
+class SessionMemoryResponse(BaseModel):
+    session_id: str
+    status: str
+    events: list[SessionMemoryEvent] = Field(default_factory=list)
+    events_count: int = 0
+    state: dict = Field(default_factory=dict)
