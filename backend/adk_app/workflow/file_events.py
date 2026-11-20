@@ -6,7 +6,7 @@ import re
 from typing import Any
 
 
-logger = logging.getLogger("vibecode.file_events")
+logger = logging.getLogger("agenticdev.file_events")
 
 
 # ============================================================
