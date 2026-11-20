@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 
 
 logger = logging.getLogger(
-    "vibecode.approval"
+    "agenticdev.approval"
 )
 
 
